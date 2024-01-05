@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  namespace: cdss # Namespace where the Secret is located
+  namespace: datacraft # Namespace where the Secret is located
   name: configmap-gradio # Name of the Config Map
 data:
   LOG_LEVEL: DEBUG

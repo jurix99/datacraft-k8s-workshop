@@ -1,0 +1,17 @@
+# Service definition for the 'api-service' within the 'cdss' namespace
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: datacraft
+  labels:
+    io.kompose.service: gradio
+  name: gradio-service
+spec:
+  selector:
+    app: gradio
+  type: NodePort # Exposes the service internally within the cluster only
+  ports:
+    - protocol: TCP
+      port: 80 # Exposed port on the ClusterIP
+      targetPort: 8080 # Traffic will be forwarded to port 4444 of the selected pods
+      nodePort: 30007

@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gradio-ingress
+  namespace: datacraft
+  labels:
+    name: gradio-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - path: "/"
+        pathType: Prefix 
+        backend:
+          service:
+            name: gradio-service
+            port: 
+              number: 80
