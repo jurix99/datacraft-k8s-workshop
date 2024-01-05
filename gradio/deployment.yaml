@@ -1,0 +1,31 @@
+# Deployment definition for the 'api-deployment' within the 'cdss' namespace
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: cdss # Namespace where the Deployment is located
+  name: api-deployment # Name of the Deployment resource
+  labels: # List of labels to give context on that deployment
+    name: gradio
+    io.kompose.service: gradio
+    type: gradio
+spec:
+  replicas: 1 # Number of desired replicas (pods) for this Deployment
+  selector:
+    matchLabels:
+      app: gradio # Selects pods with the label 'app: gradio'
+  template:
+    metadata:
+      labels:
+        app: gradio # Label 'app' with value 'gradio' applied to the pod template
+    spec:
+      containers:
+        - name: gradio # Name of the container within the pod
+          image: ekitfrnsbxacr01.azurecr.io/gradio:1 # Docker image to use for the container
+          ports:
+            - containerPort: 8080 # Port to expose on the container
+          envFrom:
+            # Environment variables to be sourced from ConfigMaps and Secrets
+            - configMapRef:
+                name: configmap-gradio # ConfigMap named 'configmap-api' will be used as an environment source
+            - secretRef:
+                name: secrets-gradio # Secret named 'secrets-api' will be used as an environment source
