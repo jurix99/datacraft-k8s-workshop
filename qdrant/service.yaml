@@ -1,0 +1,16 @@
+# Service definition for the 'api-service' within the 'cdss' namespace
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: climateqa
+  labels:
+    io.kompose.service: qdrant-service
+  name: qdrant-service
+spec:
+  selector:
+    app: qdrant
+  type: NodePort # Exposes the service internally within the cluster only
+  ports:
+    - protocol: TCP
+      port: 6333 # Exposed port on the ClusterIP
+      targetPort: 6333 # Traffic will be forwarded to port 8080 of the selected pods

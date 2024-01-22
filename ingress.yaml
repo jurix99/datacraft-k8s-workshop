@@ -1,18 +1,39 @@
+# Ingress definition for the 'climateqa-ingress' within the 'climateqa' namespace
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: gradio-ingress
-  namespace: datacraft
-  labels:
-    name: gradio-ingress
+  name: climateqa-ingress # Name of the Ingress resource
+  namespace: climateqa # Namespace where the Ingress is located
+  annotations:
+    # Annotations provide additional configuration for the Ingress controller
+    # Rewrites the URL path before sending the request to the backend service
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    # Specifies the ClusterIssuer to use for obtaining SSL certificates
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    # Adds the base URL of the request to the rewritten path
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+    # Enables the use of regular expressions in the path matching
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    # Redirects HTTP requests to HTTPS
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
+  ingressClassName: nginx # Specifies the Ingress controller class to use
+  tls:
+  # TLS configuration for securing the traffic
+  - hosts:
+    # Host for which the SSL certificate will be issued
+    - "datacraft.radians-dev.ekimetrics.io"
+    secretName: tls-secret # Name of the Kubernetes secret that stores the SSL certificate
   rules:
-  - http:
-      paths:
-      - path: "/"
-        pathType: Prefix 
-        backend:
-          service:
-            name: gradio-service
-            port: 
-              number: 80
+  # Ingress rules for routing traffic based on the host
+  - host: "datacraft.radians-dev.ekimetrics.io"
+    http:
+        paths:
+          # Path-based routing configuration
+          - path: /?(.*) # Matches any path
+            pathType: Prefix # Prefix-based matching
+            backend:
+              service:
+                name: qa-service # Name of the backend service to route the traffic to
+                port:
+                  number: 80 # Port number of the backend service

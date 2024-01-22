@@ -1,0 +1,31 @@
+# Deployment definition for the 'qa-deployment' within the 'climateqa' namespace
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: climateqa # Namespace where the Deployment is located
+  name: qa-deployment # Name of the Deployment resource
+  labels: # List of labels to give context on that deployment
+    name: qa
+    io.kompose.service: qa
+    type: qa
+spec:
+  replicas: 1 # Number of desired replicas (pods) for this Deployment
+  selector:
+    matchLabels:
+      app: qa # Selects pods with the label 'app: qa'
+  template:
+    metadata:
+      labels:
+        app: qa # Label 'app' with value 'qa' applied to the pod template
+    spec:
+      containers:
+        - name: qa # Name of the container within the pod
+          image: speedup/climateqa:3 # Docker image to use for the container
+          ports:
+            - containerPort: 7860 # Port to expose on the container
+          envFrom:
+            # Environment variables to be sourced from ConfigMaps and Secrets
+            - configMapRef:
+                name: configmap-qa # ConfigMap named 'configmap-api' will be used as an environment source
+            - secretRef:
+               name: secrets-qa # Secret named 'secrets-api' will be used as an environment source
