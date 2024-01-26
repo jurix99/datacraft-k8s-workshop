@@ -1,8 +1,0 @@
-# ConfigMap definition for the 'configmap-api' within the 'cdss' namespace
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: cdss # Namespace where the Secret is located
-  name: configmap-gradio # Name of the Config Map
-data:
-  LOG_LEVEL: DEBUG
